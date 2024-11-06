@@ -1,12 +1,16 @@
 const express = require("express")
 require("dotenv").config()
 const connectDb = require("./config/database")
+const userRouter = require("./routes/userRouter")
+const jobRouter = require("./routes/jobRouter")
+const cookieParser = require("cookie-parser")
 const app = express()
 const PORT = process.env.PORT || 5000
 
-app.get("/home", (req,res) => {
-    res.send("hello from the server")
-})
+app.use(express.json())
+app.use(cookieParser())
+app.use("/api/",userRouter)
+app.use("/api/", jobRouter)
 
 connectDb()
 .then(() => {
