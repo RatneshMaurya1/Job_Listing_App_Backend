@@ -8,6 +8,22 @@ const userRouter = express.Router()
 userRouter.post("/signup",async (req,res) => {
     try {
     const {name,email,password,phone} = req.body
+    const isUserExists = await User.findOne({email})
+    if(isUserExists){
+       return res.status(400).json({message:"Email already taken",
+        status:"400"
+       })
+    }
+    if(name.length < 4){
+       return res.status(400).json({message:"Name is too short",
+        status:"400"
+       })
+    }
+    if(name.length > 20){
+       return res.status(400).json({message:"Name is too long",
+        status:"400"
+       })
+    }
     const hashPassword = await bcrypt.hash(password,10)
     const user = new User({
         name,
@@ -18,11 +34,14 @@ userRouter.post("/signup",async (req,res) => {
     const token = JWT.sign({email}, process.env.SECRET)
     res.cookie("token",token)
     await user.save()
-    res.status(200).json({message:"user created successfully",
+    return res.status(200).json({message:"user created successfully",
+        status:"200",
         data:user
     })
     } catch (error) {
-        res.status(400).send("failed to create user " + error)
+       return res.status(400).json({message:error.message,
+        status:"400"
+       })
     }
 })
 
@@ -39,11 +58,13 @@ userRouter.post("/signin", async (req,res) => {
     }
     const token = JWT.sign({email}, process.env.SECRET)
     res.cookie("token",token)
-    res.json({message: "Logged in successfully",
+    return res.json({message: "Logged in successfully",
         user
     })
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+       return res.status(400).json({message:error.message,
+        status:"400"
+       })
     }
 })
 

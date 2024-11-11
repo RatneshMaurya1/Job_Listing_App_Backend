@@ -17,11 +17,11 @@ jobRouter.post("/job", userAuth, async (req,res) => {
             userId: user._id
         })
         await newJob.save()
-        res.status(200).json({message: "job created successfully",
+        return res.status(200).json({message: "job created successfully",
             newJob
         })
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+       return res.status(400).send("Error: " + error.message)
     }
 })
 
@@ -38,11 +38,11 @@ jobRouter.put("/job/:id", userAuth, async (req,res) => {
     if (salary !== undefined) updatedJob.salary = salary;
     if (location !== undefined) updatedJob.location = location;
     await updatedJob.save()
-    res.status(200).json({message: "job updated successfully",
+    return res.status(200).json({message: "job updated successfully",
         updatedJob
     })
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+       return res.status(400).send("Error: " + error.message)
     }
 })
 
@@ -54,11 +54,11 @@ jobRouter.delete("/job/:id", userAuth, async (req,res) => {
         throw new Error("jon not found")
     }
     await Job.findByIdAndDelete(req.params.id)
-    res.status(200).json({message: "job deleted successfully",
+    return res.status(200).json({message: "job deleted successfully",
         deletedJob
     })
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+       return res.status(400).send("Error: " + error.message)
     }
 })
 
@@ -70,7 +70,7 @@ jobRouter.get("/job/:id", async(req,res) => {
         }
         res.json(job)
     } catch (error) {
-        res.status(400).send("Error: " + error.message)
+       return res.status(400).send("Error: " + error.message)
     }
 })
 
