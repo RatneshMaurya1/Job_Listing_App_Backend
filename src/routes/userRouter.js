@@ -31,8 +31,8 @@ userRouter.post("/signup",async (req,res) => {
         password:hashPassword,
         phone
     })
-    const token = JWT.sign({email}, process.env.SECRET)
-    res.cookie("token",token)
+    const token = JWT.sign({email}, process.env.SECRET, )
+    res.cookie("token",token,{httpOnly:true})
     await user.save()
     return res.status(200).json({message:"user created successfully",
         status:"200",
@@ -57,7 +57,7 @@ userRouter.post("/signin", async (req,res) => {
         throw new Error("invalid email or password")
     }
     const token = JWT.sign({email}, process.env.SECRET)
-    res.cookie("token",token)
+    res.cookie("token",token,{httpOnly:true})
     return res.json({message: "Logged in successfully",
         user
     })

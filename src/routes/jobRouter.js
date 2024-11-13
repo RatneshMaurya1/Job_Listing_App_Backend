@@ -73,6 +73,17 @@ jobRouter.get("/job/:id", async(req,res) => {
        return res.status(400).send("Error: " + error.message)
     }
 })
+jobRouter.get("/job", async(req,res) => {
+    try {
+        const job = await Job.find()
+        if(!job){
+            return res.status(400).json({message: "job not found"})
+        }
+        res.json(job)
+    }  catch (error) {
+        return res.status(400).send("Error: " + error.message)
+     }
+})
 
 
 module.exports = jobRouter
