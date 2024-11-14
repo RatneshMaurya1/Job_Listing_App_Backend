@@ -14,6 +14,7 @@ const corsOption = {
         "https://job-listing-app-frontend-ratnesh.vercel.app"
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
 }
 app.use(cors(corsOption))
 app.use(express.json())
