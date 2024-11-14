@@ -35,7 +35,7 @@ userRouter.post("/signup",async (req,res) => {
     res.cookie("token",token,{
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        // sameSite: "strict",
     }
     )
     await user.save()
@@ -65,7 +65,7 @@ userRouter.post("/signin", async (req,res) => {
     res.cookie("token",token,{
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        // sameSite: "strict",
     }
     )
     return res.json({message: "Logged in successfully",
