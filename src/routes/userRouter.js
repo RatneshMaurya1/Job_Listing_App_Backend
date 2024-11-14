@@ -33,9 +33,9 @@ userRouter.post("/signup",async (req,res) => {
     })
     const token = JWT.sign({email}, process.env.SECRET, )
     res.cookie("token",token,{
-        httpOnly: true,
+        // httpOnly: true,
         secure: true,
-        // sameSite: "strict",
+        sameSite: "strict",
     }
     )
     await user.save()
@@ -63,9 +63,9 @@ userRouter.post("/signin", async (req,res) => {
     }
     const token = JWT.sign({email}, process.env.SECRET)
     res.cookie("token",token,{
-        httpOnly: true,
+        // httpOnly: true,
         secure: true,
-        // sameSite: "strict",
+        sameSite: "strict",
     }
     )
     return res.json({message: "Logged in successfully",
