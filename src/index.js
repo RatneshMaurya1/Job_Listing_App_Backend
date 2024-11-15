@@ -17,6 +17,7 @@ const corsOption = {
     methods: ["GET", "POST", "PUT", "DELETE"],
 }
 app.use(cors(corsOption))
+app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/",userRouter)

@@ -5,7 +5,7 @@ require("dotenv").config()
 
 async function userAuth(req, res, next) {
   try {
-    const { token } = req.cookies;
+    const token  = req.headers.authorization;
     if (!token) {
       throw new Error("invalid token");
     }
@@ -23,5 +23,6 @@ async function userAuth(req, res, next) {
     res.status(400).send("Error: " + error.message);
   }
 }
+
 
 module.exports = userAuth;

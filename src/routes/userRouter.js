@@ -2,6 +2,7 @@ const express = require("express")
 const bcrypt = require("bcrypt")
 const JWT = require("jsonwebtoken")
 const User = require("../models/user.schema")
+const userAuth  = require("../middleware/userAuth")
 require("dotenv").config()
 const userRouter = express.Router()
 
@@ -32,16 +33,11 @@ userRouter.post("/signup",async (req,res) => {
         phone
     })
     const token = JWT.sign({email}, process.env.SECRET, )
-    res.cookie("token",token,{
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-    }
-    )
     await user.save()
     return res.status(200).json({message:"user created successfully",
         status:"200",
-        data:user
+        data:user,
+        token
     })
     } catch (error) {
        return res.status(400).json({message:error.message,
@@ -62,15 +58,23 @@ userRouter.post("/signin", async (req,res) => {
         throw new Error("invalid email or password")
     }
     const token = JWT.sign({email}, process.env.SECRET)
-    res.cookie("token",token,{
-        httpOnly: true,
-        secure: true,
-        sameSite:"none",
-    }
-    )
     return res.json({message: "Logged in successfully",
         user,
         token
+    })
+    } catch (error) {
+       return res.status(400).json({message:error.message,
+        status:"400"
+       })
+    }
+})
+userRouter.post("/profile",userAuth, async (req,res) => {
+    try{
+       const user = req.user
+   
+
+    return res.json({message: "Logged in successfully",
+        user,
     })
     } catch (error) {
        return res.status(400).json({message:error.message,

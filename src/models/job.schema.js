@@ -9,6 +9,9 @@ const jobSchema = new mongoose.Schema({
     type: String,
     default:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXOB5zhZQdXKzS5jvNPuvzrQElWiRVQKLkRg&s",
+  },
+  jobPosition:{
+    type: String,
     required: true,
   },
   salary: {
@@ -30,7 +33,7 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  abou: {
+  about: {
     type: String,
     required: true,
   },

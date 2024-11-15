@@ -1,42 +1,61 @@
 const express = require("express")
 const userAuth = require("../middleware/userAuth")
 const Job = require("../models/job.schema")
+const validateJobData = require("../middleware/isValidJob")
 
 
 const jobRouter = express.Router()
 
-jobRouter.post("/job", userAuth, async (req,res) => {
+jobRouter.post("/job", userAuth, validateJobData, async (req, res) => {
     try {
-        const user = req.user
-        const {title,description,salary,location} = req.body
+        const user = req.user;
+        const { company, logoUrl, jobPosition, salary, jobType, remoteOffice, location, description, about, skills, information } = req.body;
+        
         const newJob = new Job({
-            title,
-            description,
+            company,
+            logoUrl,
+            jobPosition,
             salary,
+            jobType,
+            remoteOffice,
             location,
+            description,
+            about,
+            skills,
+            information,
             userId: user._id
-        })
-        await newJob.save()
-        return res.status(200).json({message: "job created successfully",
-            newJob
-        })
-    } catch (error) {
-       return res.status(400).send("Error: " + error.message)
-    }
-})
+        });
 
-jobRouter.put("/job/:id", userAuth, async (req,res) => {
+        await newJob.save();
+        return res.status(200).json({
+            message: "Job created successfully",
+            newJob
+        });
+    } catch (error) {
+        return res.status(400).send("Error: " + error.message);
+    }
+});
+
+
+jobRouter.put("/job/:id", userAuth,validateJobData, async (req,res) => {
     try {
         const user = req.user
-    const { title, description, salary, location } = req.body;
+        const {company,logoUrl,jobPosition,salary,jobType,remoteOffice,location,description,about,skills,information} = req.body
     const updatedJob = await Job.findOne({_id:req.params.id, userId:user._id})
     if(!updatedJob){
         return res.status(401).json({message: "job not found"})
     }
-    if (title !== undefined) updatedJob.title = title;
-    if (description !== undefined) updatedJob.description = description;
-    if (salary !== undefined) updatedJob.salary = salary;
-    if (location !== undefined) updatedJob.location = location;
+    updatedJob.company = company,
+    updatedJob.logoUrl = logoUrl,
+    updatedJob.jobPosition = jobPosition,
+    updatedJob.salary = salary,
+    updatedJob.jobType = jobType,
+    updatedJob.remoteOffice = remoteOffice,
+    updatedJob.location = location,
+    updatedJob.description = description,
+    updatedJob.about = about,
+    updatedJob.skills = skills,
+    updatedJob.information = information,
     await updatedJob.save()
     return res.status(200).json({message: "job updated successfully",
         updatedJob
