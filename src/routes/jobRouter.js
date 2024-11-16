@@ -37,33 +37,52 @@ jobRouter.post("/job", userAuth, validateJobData, async (req, res) => {
 });
 
 
-jobRouter.put("/job/:id", userAuth,validateJobData, async (req,res) => {
+jobRouter.put("/job/:id", userAuth, async (req, res) => {
     try {
-        const user = req.user
-        const {company,logoUrl,jobPosition,salary,jobType,remoteOffice,location,description,about,skills,information} = req.body
-    const updatedJob = await Job.findOne({_id:req.params.id, userId:user._id})
-    if(!updatedJob){
-        return res.status(401).json({message: "job not found"})
-    }
-    updatedJob.company = company,
-    updatedJob.logoUrl = logoUrl,
-    updatedJob.jobPosition = jobPosition,
-    updatedJob.salary = salary,
-    updatedJob.jobType = jobType,
-    updatedJob.remoteOffice = remoteOffice,
-    updatedJob.location = location,
-    updatedJob.description = description,
-    updatedJob.about = about,
-    updatedJob.skills = skills,
-    updatedJob.information = information,
-    await updatedJob.save()
-    return res.status(200).json({message: "job updated successfully",
-        updatedJob
-    })
+        const user = req.user;
+
+        const {
+            company,
+            logoUrl,
+            jobPosition,
+            salary,
+            jobType,
+            remoteOffice,
+            location,
+            description,
+            about,
+            skills,
+            information,
+        } = req.body;
+
+        const updatedJob = await Job.findOne({ _id: req.params.id, userId: user._id });
+
+        if (!updatedJob) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        updatedJob.company = company || updatedJob.company;
+        updatedJob.logoUrl = logoUrl || updatedJob.logoUrl;
+        updatedJob.jobPosition = jobPosition || updatedJob.jobPosition;
+        updatedJob.salary = salary || updatedJob.salary;
+        updatedJob.jobType = jobType || updatedJob.jobType;
+        updatedJob.remoteOffice = remoteOffice || updatedJob.remoteOffice;
+        updatedJob.location = location || updatedJob.location;
+        updatedJob.description = description || updatedJob.description;
+        updatedJob.about = about || updatedJob.about;
+        updatedJob.skills = skills || updatedJob.skills;
+        updatedJob.information = information || updatedJob.information;
+
+        await updatedJob.save();
+
+        return res.status(200).json({
+            message: "Job updated successfully",
+            updatedJob,
+        });
     } catch (error) {
-       return res.status(400).send("Error: " + error.message)
+        return res.status(400).send("Error: " + error.message);
     }
-})
+});
 
 jobRouter.delete("/job/:id", userAuth, async (req,res) => {
     try {
